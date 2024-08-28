@@ -1,4 +1,4 @@
-string = str(input('Enter somesing: '))
+string = input('Enter somesing: ')
 length = len(string)
 
 underscoreNum = string.count('_')

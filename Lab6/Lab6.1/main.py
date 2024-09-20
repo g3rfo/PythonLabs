@@ -1,8 +1,8 @@
-def reverseAndLengthCalculationFunction ():
-    list = input('Enter a list: ').split()
-    print("Your list:", list)
-    list.reverse()
-    print("Reversed list:", list)
-    print("List length:", len(list))
+def reverse_and_length_calculation_function ():
+    our_list = list(map(int , input('Enter a list: ').split()))
+    print("Your list:", our_list)
+    our_list.reverse()
+    print("Reversed list:", our_list)
+    print("List length:", len(our_list))
 
-reverseAndLengthCalculationFunction()
+reverse_and_length_calculation_function()

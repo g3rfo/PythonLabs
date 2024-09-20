@@ -1,7 +1,7 @@
-def everySecondElementFunction ():
-    firstList = input('Enter a list: ').split()
-    print("Your list:", firstList)
-    secondList = firstList[1::2]
-    print("Second list(every second element of the first):", secondList)
+def every_second_element_function ():
+    first_list = list(map(int , input('Enter a list: ').split()))
+    print("Your list:", first_list)
+    second_list = first_list[1::2]
+    print("Second list(every second element of the first):", second_list)
 
-everySecondElementFunction()
+every_second_element_function()

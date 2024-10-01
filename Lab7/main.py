@@ -43,8 +43,7 @@ def average_grade_of_student(students, key):
         average = sum(students[key]) / len(students[key])
         return average
     else:
-        print("<--Student is not found-->")
-        return None
+        print("Student is not found")
 
 def average_grade_of_group(students):
     total_average = 0
@@ -90,9 +89,7 @@ while True:
         data_sort(students, student)
     elif answer == 5:
         student = input("Enter student name:")
-        average = average_grade_of_student(students, student)
-        if(average != None):
-            print(student,":",average_grade_of_student(students, student))
+        print(student,":",average_grade_of_student(students, student))
     elif answer == 6:
         greater_than_average_print(students)
     else:

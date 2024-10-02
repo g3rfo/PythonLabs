@@ -14,20 +14,23 @@ def data_print(students):
     for key in students:
         print(key,":", students[key])
 
-def data_add(students, key, grade):
+def data_add(students, key):
     if key in students:
-        students[key].append(grade)
-        print(key,":", students[key])
-    else:
-        print("<--Student is not found-->")
-
-def data_remove(students, key, grade):
-    if key in students:
-        if grade in students[key]:
-            students[key].remove(grade)
+        print(key,": already in list.\n<0>To skip\n<1>To update grades")
+        aswer = int(input("Choose an action:"))
+        if aswer == 1:
+            new_grades = list(map(int, input("Enter new grades:").split()))
+            students[key] = new_grades
             print(key, ":", students[key])
-        else:
-            print("<--Grade is not found-->")
+    else:
+        new_grades = list(map(int, input("Enter new grades:").split()))
+        students[key] = new_grades
+        print(key, ":", students[key])
+
+def data_remove(students, key):
+    if key in students:
+        students.pop(key)
+        print(key, ": removed successfully")
     else:
         print("<--Student is not found-->")
 
@@ -78,12 +81,10 @@ while True:
         data_print(students)
     elif answer == 2:
         student = input("Enter student name:")
-        grade = int(input("Enter grade to add:"))
-        data_add(students, student, grade)
+        data_add(students, student)
     elif answer == 3:
         student = input("Enter student name:")
-        grade = int(input("Enter grade to remove:"))
-        data_remove(students, student, grade)
+        data_remove(students, student)
     elif answer == 4:
         student = input("Enter student name:")
         data_sort(students, student)

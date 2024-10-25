@@ -1,4 +1,6 @@
 import csv
+# Параметри введення даних у файлі Export_of_goods_and_services.csv
+finale_file_fieldnames = ['Series Name', 'Series Code', 'Country Name', 'Country Code', '2018 [YR2018]', '2019 [YR2019]']
 # Перевірка відкриття файлу Export_of_goods_and_services.csv, виведення вмісту
 try:
     start_csv_file = open('Export_of_goods_and_services.csv', 'r')

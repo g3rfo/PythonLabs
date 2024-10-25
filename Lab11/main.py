@@ -1,10 +1,8 @@
 import csv
-# Параметри введення даних у файлі Export_of_goods_and_services.csv
-start_file_fieldnames = ['Series Name', 'Series Code', 'Country Name', 'Country Code', '2018 [YR2018]', '2019 [YR2019]']
 # Перевірка відкриття файлу Export_of_goods_and_services.csv, виведення вмісту
 try:
     start_csv_file = open('Export_of_goods_and_services.csv', 'r')
-    reader = csv.DictReader(start_csv_file, fieldnames= start_file_fieldnames, delimiter=',')
+    reader = csv.DictReader(start_csv_file, delimiter=',')
     print("Country Name: 2018 [YR2018], 2019 [YR2019]")
     for row in reader:
         print(row['Country Name'], ':', row['2018 [YR2018]'],',', row['2019 [YR2019]'])

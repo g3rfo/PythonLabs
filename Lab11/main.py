@@ -26,7 +26,11 @@ selected_countries = [country.strip() for country in user_input.split(",")]
 # Занасення даних вибраних країн у файл Lab11_file.csv
 for row in reader:
     if row['Country Name'] in selected_countries:
-        writer.writerow({'Country Name' : row['Country Name'], '2018 [YR2018]' : row['2018 [YR2018]'], '2019 [YR2019]' : row['2019 [YR2019]']})
+        if row['2018 [YR2018]'] != '..' and row['2019 [YR2019]'] != '..':
+            writer.writerow({'Country Name' : row['Country Name'], '2018 [YR2018]' : row['2018 [YR2018]'], '2019 [YR2019]' : row['2019 [YR2019]']})
+            print(row['Country Name'], ": data added")
+        else:
+            print(row['Country Name'], ": has no data")
 # Закриття всіх файлів
 start_csv_file.close()
 final_csv_file.close()

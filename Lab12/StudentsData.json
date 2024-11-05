@@ -1,0 +1,112 @@
+[
+    {
+        "name": "Marina",
+        "surname": "Baranova",
+        "grades": {
+            "Python": 83,
+            "Numerical Methods": 79,
+            "Algorithms": 90,
+            "MMDO": 85,
+            "IT-Business": 78
+        }
+    },
+    {
+        "name": "Sofia",
+        "surname": "Baranova",
+        "grades": {
+            "Python": 88,
+            "Numerical Methods": 81,
+            "Algorithms": 93,
+            "MMDO": 80,
+            "IT-Business": 75
+        }
+    },
+    {
+        "name": "Yulia",
+        "surname": "Dyachenko",
+        "grades": {
+            "Python": 78,
+            "Numerical Methods": 85,
+            "Algorithms": 87,
+            "MMDO": 76,
+            "IT-Business": 82
+        }
+    },
+    {
+        "name": "Polina",
+        "surname": "Zavhorodnia",
+        "grades": {
+            "Python": 90,
+            "Numerical Methods": 82,
+            "Algorithms": 91,
+            "MMDO": 88,
+            "IT-Business": 80
+        }
+    },
+    {
+        "name": "Timothy",
+        "surname": "Ivzhenko",
+        "grades": {
+            "Python": 79,
+            "Numerical Methods": 77,
+            "Algorithms": 84,
+            "MMDO": 83,
+            "IT-Business": 81
+        }
+    },
+    {
+        "name": "Mykyta",
+        "surname": "Lenda",
+        "grades": {
+            "Python": 85,
+            "Numerical Methods": 80,
+            "Algorithms": 89,
+            "MMDO": 82,
+            "IT-Business": 76
+        }
+    },
+    {
+        "name": "Daryna",
+        "surname": "Rudenko",
+        "grades": {
+            "Python": 91,
+            "Numerical Methods": 85,
+            "Algorithms": 89,
+            "MMDO": 86,
+            "IT-Business": 84
+        }
+    },
+    {
+        "name": "Yulia",
+        "surname": "Sidelnik",
+        "grades": {
+            "Python": 88,
+            "Numerical Methods": 90,
+            "Algorithms": 94,
+            "MMDO": 92,
+            "IT-Business": 86
+        }
+    },
+    {
+        "name": "Oleksandr",
+        "surname": "Shmat",
+        "grades": {
+            "Python": 79,
+            "Numerical Methods": 81,
+            "Algorithms": 84,
+            "MMDO": 78,
+            "IT-Business": 80
+        }
+    },
+    {
+        "name": "Ivan",
+        "surname": "Pyshchyk",
+        "grades": {
+            "Python": 90.0,
+            "Numerical Methods": 90.0,
+            "Algorithms": 90.0,
+            "MMDO": 90.0,
+            "IT-Business": 90.0
+        }
+    }
+]

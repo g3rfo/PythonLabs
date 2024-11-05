@@ -1,0 +1,22 @@
+[
+    {
+        "name": "Ivan",
+        "surname": "Pyshchyk",
+        "average grade": 90.0
+    },
+    {
+        "name": "Timothy",
+        "surname": "Ivzhenko",
+        "average grade": 80.8
+    },
+    {
+        "name": "Yulia",
+        "surname": "Dyachenko",
+        "average grade": 81.6
+    },
+    {
+        "name": "Daryna",
+        "surname": "Rudenko",
+        "average grade": 87.0
+    }
+]

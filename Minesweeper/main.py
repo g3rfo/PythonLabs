@@ -73,10 +73,10 @@ timer_id = None
 # Оновлення таймера
 def update_timer():
     global seconds, timer_id
-    seconds += 0.1
+    seconds += 1
     timer_label.config(text=f"{int(seconds)} s")
 
-    timer_id = game_field.after(100, update_timer)
+    timer_id = game_field.after(1000, update_timer)
 
 # Зупинка таймера
 def stop_timer():
@@ -159,8 +159,6 @@ def start_button_click():
     update_timer()  # Запуск таймеру
     is_enable_click = True  # Доступ до натиснення кнопок на ігровому полі
 
-    counter += 1
-    print(counter)
 
 # Задання параметрів кнопки старт(текст, шрифт, розміри, колір, обведення, функція при натисненні)
 start_button = tkinter.Button(

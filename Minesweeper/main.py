@@ -14,11 +14,14 @@ red = "#C40C0C"
 black = "#000000"
 
 # -------------------------------------------------ІГРОВЕ ПОЛЕ---------------------------------------------------------|
-# Створення ігрового поля
 
+# Створення вікна програми
+
+# Розміри вікна
 global_width = 500
 global_height = 500
 
+# Задання параметрів вікна програми(розміри(мін, макс), назва, колір)
 game_field = tkinter.Tk()
 game_field.geometry(f"{global_width}x{global_height}")
 game_field.minsize(global_width, global_height)
@@ -26,12 +29,17 @@ game_field.maxsize(global_width, global_height)
 game_field.title("Minesweeper")
 game_field.configure(background=grey)
 
+
 # -------------------------------------------------ВЕРХНЯ ПАНЕЛЬ-------------------------------------------------------|
 
-# Canvas
+
+# Створення канвасу для верхньої панелі
+
+# Розміри верхньої панелі
 top_canvas_width = global_width
 top_canvas_height = global_height / 4
 
+# Задання параметрів верхньої панелі(розміри, колір, обведення)
 top_canvas = tkinter.Canvas(
     game_field,
     background=dark_grey,
@@ -39,29 +47,13 @@ top_canvas = tkinter.Canvas(
     height=top_canvas_height,
     highlightthickness=0
 )
+
+# Розміщення верхньої панелі у вікні програми
 top_canvas.pack(fill="x", pady=0)
 
 # -------------------------------------------------ТАЙМЕР--------------------------------------------------------------|
 
-# Оновлення таймера------------------------------------------------------------------------------------------------|
-seconds = 0
-timer_id = None
-
-def update_timer():
-    global seconds
-    seconds += 1
-    timer_label.config(text=f"{seconds} s")
-    global timer_id
-    timer_id = game_field.after(1000, update_timer)
-
-# Зупинка таймера
-def stop_timer():
-    global timer_id
-    if timer_id is not None:
-        game_field.after_cancel(timer_id)
-        timer_id = None  # Очищаємо ідентифікатор таймера
-
-# Таймер-----------------------------------------------------------------------------------------------------------|
+# Задання параметрів таймеру(текст, шрифт, розміри, колір, обведення)
 timer_label = tkinter.Label(
     game_field,
     text="0 s",
@@ -74,13 +66,33 @@ timer_label = tkinter.Label(
     height=1
 )
 
+# Змінні для роботи таймеру
+seconds = 0
+timer_id = None
+
+# Оновлення таймера
+def update_timer():
+    global seconds, timer_id
+    seconds += 0.1
+    timer_label.config(text=f"{int(seconds)} s")
+
+    timer_id = game_field.after(100, update_timer)
+
+# Зупинка таймера
+def stop_timer():
+    global timer_id
+    if timer_id is not None:
+        game_field.after_cancel(timer_id)
+        timer_id = None
+        timer_label.config(text="0 s")
 
 # -------------------------------------------------КІЛЬКІСТЬ ПРАПОРЦІВ-------------------------------------------------|
 
+# Змінні для роботи лічильника
 flags_number = 10
 current_flags_number = flags_number
 
-# Кількість прапорців----------------------------------------------------------------------------------------------|
+# Задання параметрів кількості прапорців(текст, шрифт, розміри, колір, обведення)
 flags_number_label = tkinter.Label(
     game_field,
     text=str(flags_number),
@@ -93,7 +105,9 @@ flags_number_label = tkinter.Label(
     height=1
 )
 
-# Оновлення кількості прапорців------------------------------------------------------------------------------------|
+# Оновлення кількості прапорців
+
+# Видалення прапорця на ігровому полі(лічильник збільшується)
 def flags_number_del():
     global current_flags_number
     if current_flags_number != flags_number:
@@ -102,7 +116,7 @@ def flags_number_del():
         return True
     else:
         return False
-
+# Додавання прапорця на ігрове поле(лічильник зменшується)
 def flags_number_add():
     global current_flags_number
     if current_flags_number != 0:
@@ -114,36 +128,41 @@ def flags_number_add():
 
 
 # -------------------------------------------------КНОПКА СТАРТ--------------------------------------------------------|
+
+# Змінні для роботи функцій кнопки старт
 is_enable_click = True
 game_end_message = None
-# Функції кнопки старт---------------------------------------------------------------------------------------------|
+counter = 0
+
+# Функції кнопки старт
 def start_button_click():
-    # Оновлення кількості прапорців
-    global seconds, timer_id, current_flags_number, game_end_message, is_enable_click
+    # Змінні для роботи
+    global seconds, timer_id, current_flags_number, game_end_message, is_enable_click, mines, counter
 
-    current_flags_number = flags_number
-    flags_number_label.config(text=current_flags_number)
-    create_buttons()
+    # Зупинка таймеру
+    stop_timer()
 
-    # Повідомлення про прогаш
+    # Видалення повідомлення про кінець поточної гри
     if game_end_message:
         game_end_message.destroy()
     game_end_message = None
 
-    # Запуск гри
-    is_enable_click = True
-    new_game()
-
-    # Запуск таймера
-    global seconds, timer_id
-    if timer_id is not None:
-        game_field.after_cancel(timer_id)
+    # Скидання гри
     seconds = 0
-    timer_label.config(text="0 s")
-    update_timer()
+    bottom_canvas.delete("all")  # Видалення сітки кнопок ігрового поля
+    current_flags_number = flags_number  # Оновлення кількості невикористаних прапорців
+    flags_number_label.config(text=current_flags_number)
 
+    # Запуск гри
+    create_buttons()  # Створення сітки ігрового поля
+    mines = generate_mines(rows, cols, flags_number)  # Генерація розташування мін на полі
+    update_timer()  # Запуск таймеру
+    is_enable_click = True  # Доступ до натиснення кнопок на ігровому полі
 
-# Кнопка старт-----------------------------------------------------------------------------------------------------|
+    counter += 1
+    print(counter)
+
+# Задання параметрів кнопки старт(текст, шрифт, розміри, колір, обведення, функція при натисненні)
 start_button = tkinter.Button(
     game_field,
     text="PLAY",
@@ -157,7 +176,7 @@ start_button = tkinter.Button(
     command=start_button_click
 )
 
-# Додавання елементів у канвас-------------------------------------------------------------------------------------|
+# Додавання елементів(таймер, кількість доступних прапорців, кнопки PLAY) у канвас
 top_canvas.create_window(top_canvas_width // 2 + top_canvas_width // 3, top_canvas_height // 2, window=timer_label,anchor="center")
 top_canvas.create_window(top_canvas_width // 2 - top_canvas_width // 3, top_canvas_height // 2,window=flags_number_label, anchor="center")
 top_canvas.create_window(top_canvas_width // 2, top_canvas_height // 2, window=start_button, anchor="center")
@@ -165,10 +184,13 @@ top_canvas.create_window(top_canvas_width // 2, top_canvas_height // 2, window=s
 
 # -------------------------------------------------НИЖНЯ ПАНЕЛЬ--------------------------------------------------------|
 
-# Canvas
+# Створення канвасу для нижньої панелі
+
+# Розміри нижньої панелі
 bottom_canvas_width = global_width // 1.5
 bottom_canvas_height = global_height // 1.5
 
+# Задання параметрів нижньої панелі(розміри, колір, обведення)
 bottom_canvas = tkinter.Canvas(
     game_field,
     background=dark_grey,
@@ -176,8 +198,9 @@ bottom_canvas = tkinter.Canvas(
     height=bottom_canvas_height,
     highlightthickness=1
 )
-bottom_canvas.pack(padx=20, pady=20)
 
+# Розміщення нижньої панелі у вікні програми
+bottom_canvas.pack(padx=20, pady=20)
 
 # -------------------------------------------------СІТКА КНОПОК--------------------------------------------------------|
 
@@ -190,24 +213,35 @@ padding = 2  # Відступ між кнопками
 x_offset = (bottom_canvas_width - (button_size + padding) * cols) // 2
 y_offset = (bottom_canvas_height - (button_size + padding) * rows) // 2
 
-# Створення кнопок у сітці-----------------------------------------------------------------------------------------|
+# Створення кнопок у сітці
+# Створення порожнього масиву кнопок
 buttons = []
 
+# Функція створення кнопок для ігрового поля
 def create_buttons():
+    # Масив кнопок
     global buttons
-    buttons = []  # Reset the buttons
+
+    # Очищення попереднього масиву, якщо такий існує
+    if buttons:
+        for row in buttons:
+            for button in row:
+                button.destroy()
+    buttons = []
+
+    # Заповнення масиву кнопками
     for row in range(rows):
         button_row = []
         for col in range(cols):
-            # Позиція фрейму для кнопки
+            # Обрахунок позицї фрейму для кнопки
             x = x_offset + col * (button_size + padding)
             y = y_offset + row * (button_size + padding)
 
             # Створення фрейму з фіксованими розмірами для кнопки
             frame = tkinter.Frame(bottom_canvas, width=button_size, height=button_size)
-            frame.grid_propagate(False)  # Забороняє змінювати розмір фрейму під вміст
+            frame.grid_propagate(False)  # Заборона змінювати розмір фрейму під вміст
 
-            # Створення кнопки всередині фрейму
+            # Задання параметрів кнопки(текст, розміри, колір, обведення)
             button = tkinter.Button(
                 frame,
                 text="",
@@ -219,6 +253,8 @@ def create_buttons():
                 highlightthickness=2,
                 highlightbackground=medium_grey,
             )
+
+            # Розміщення кнопки по розмірах фрейму
             button.place(relwidth=1, relheight=1)
 
             # Прив'язка подій до кнопки
@@ -227,13 +263,50 @@ def create_buttons():
 
             # Додавання фрейму з кнопкою на Canvas
             bottom_canvas.create_window(x + padding, y + padding, window=frame, anchor="nw")
+            # Оновлення масиву кнопок
             button_row.append(button)
+        # Оновлення масиву кнопок
         buttons.append(button_row)
 
 
 # -------------------------------------------------ЛОГІКА ПРОГРАМИ-----------------------------------------------------|
 
-# Визначення кольору цифри
+
+# Створення порожнього масиву мін
+mines = []
+
+# Функція випадкового розміщення мін на полі
+def generate_mines(rows, cols, number_of_mines):
+    # Масив мін
+    global mines
+
+    # Заповнення масиву мін значенням False
+    mines = [[False for _ in range(cols)] for _ in range(rows)]
+    # Змінна кількості встановлених мін
+    mines_planted = 0
+
+    # Цикл рандомного встановлення мін, поки не досягнемо потрібної кількості
+    while mines_planted < number_of_mines:
+        row = random.randint(0, rows - 1)
+        col = random.randint(0, cols - 1)
+        if not mines[row][col]:  # Якщо клітинці ще немає міни
+            mines[row][col] = True  # Надання комірці значення True(в цій комірці встановлено міну)
+            mines_planted += 1  # Оновлення кількості встановлених мін
+    return mines
+
+# Функція для підрахунку кількості мін навколо клітинки
+def count_adjacent_mines(row, col):
+    # Змінна кількості мін навколо клітинки
+    mine_count = 0
+
+    # Цикл перевірки всіх комірок довколо вибраної на наявність міни
+    for i in range(max(0, row - 1), min(rows, row + 2)):
+        for j in range(max(0, col - 1), min(cols, col + 2)):
+            if (i != row or j != col) and mines[i][j]:  # Якщо це не вибрана клітинка і значення масиву мін = True(в клітинці є міна)
+                mine_count += 1  # Оновлення кількості мін навколо
+    return mine_count
+
+# Визначення кольору цифри в залежності від кількості мін навколо
 def digit_color(mine_count):
     if mine_count == 1: return "#036ebe"
     elif mine_count == 2: return "#52803a"
@@ -244,131 +317,83 @@ def digit_color(mine_count):
     elif mine_count == 7: return "#000000"
     elif mine_count == 8: return "#686D76"
 
-# Обробка кліку лівою кнопкою (відкриття клітинки)-----------------------------------------------------------------|
-def left_click(event, row, col):
-    global is_enable_click, game_end_message
-    button = buttons[row][col]
-    current_color = button.cget("background")
-
-    if current_color != light_green and current_color != medium_grey and is_enable_click:
-        if mines[row][col]:
-            open_all_mines()
-            lose()
-        else:
-            mine_count = count_adjacent_mines(row, col)
-            if mine_count > 0:
-                button.config(text=str(mine_count), state="disabled", disabledforeground=digit_color(mine_count))
-                button.config(background=medium_grey, highlightthickness=2)
-            else:
-                open_empty_cells(row, col)
-                button.config(state="disabled", disabledforeground=white)
-                button.config(background=medium_grey)
-
-            # Перевірка на виграш після відкриття клітинки
-            if is_won():
-                win()
-
-# Обробка кліку правою кнопкою (встановлення прапорця)-------------------------------------------------------------|
-def right_click(event, row, col):
-    global is_enable_click
-    button = buttons[row][col]
-    current_color = button.cget("background")
-
-    if is_enable_click:
-        if current_color == light_green:
-            action = flags_number_del()
-            if action:
-                button.config(background=light_grey, text="")
-        else:
-            if current_color == light_grey:
-                action = flags_number_add()
-                if action:
-                    button.config(background=light_green, text="<|")
-
-        # Перевірка на виграш після встановлення прапорця
-        if is_won():
-            win()
-
-# Створення масиву мін---------------------------------------------------------------------------------------------|
-mines = [[]]
-def generate_mines(rows, cols, number_of_mines):
-    global mines
-    mines = [[False for _ in range(cols)] for _ in range(rows)]
-    mines_planted = 0
-
-    while mines_planted < number_of_mines:
-        row = random.randint(0, rows - 1)
-        col = random.randint(0, cols - 1)
-        if not mines[row][col]:  # Якщо в цій клітинці ще немає міни
-            mines[row][col] = True
-            mines_planted += 1
-    return mines
-
-# Функція для підрахунку кількості мін навколо клітинки------------------------------------------------------------|
-def count_adjacent_mines(row, col):
-    mine_count = 0
-    for i in range(max(0, row - 1), min(rows, row + 2)):
-        for j in range(max(0, col - 1), min(cols, col + 2)):
-            if (i != row or j != col) and mines[i][j]:
-                mine_count += 1
-    return mine_count
-
-# Функція відкриття порожніх клітинок-----------------------------------------------------------------------------|
+# Функція відкриття порожніх клітинок
 def open_empty_cells(row, col):
+    # Змінна кількості невикористаних прапорців
     global current_flags_number
-    # Якщо навколо немає мін, відкриваємо всі сусідні клітинки
-    mine_count = count_adjacent_mines(row, col)
+
+    # Поточна кнопка
     button = buttons[row][col]
+
+    # Якщо клітинка вже відкрита, не обробляємо її
+    if button.cget("state") == "disabled":
+        return
+
+    # Обрахунок кількості мін навколо клітинки
+    mine_count = count_adjacent_mines(row, col)
+
+    # Оновлення параметрів кнопки(текст, колір, доступність для взаємодії(недоступна))
     button.config(text="", state="disabled", disabledforeground=white)
     button.config(background=medium_grey)
 
+    # Якщо мін навколо немає
     if mine_count == 0:
         # Перевіряємо всі сусідні клітинки
         for i in range(max(0, row - 1), min(rows, row + 2)):
             for j in range(max(0, col - 1), min(cols, col + 2)):
-                if (i != row or j != col):  # Перевіряємо сусідні клітинки
-                    # Якщо клітинка не відкрита, відкриваємо її
+                if (i != row or j != col):
+                    # Поточна кнопка для перевірки
                     neighbor_button = buttons[i][j]
+                    # Якщо кнопка доступна для взаємодії
                     if neighbor_button.cget("state") != "disabled":
+                        # Якщо колір кнопки зелений(на коміці встановлено прапорець)
                         if neighbor_button.cget("background") == light_green:
-                            flags_number_del()
+                            flags_number_del()  # Видалення прапорця
                         open_empty_cells(i, j)  # Рекурсивний виклик для відкриття сусідніх клітинок
-    else:
-        button.config(text=str(mine_count), disabledforeground=digit_color(mine_count))  # Якщо є міни поруч, виводимо кількість мін
+    else:  # Якщо є міни поруч
+        # Оновлення параметрів кнопки(текст = кількості мін навколо, колір = відповідно від кількості мін навколо)
+        button.config(text=str(mine_count), disabledforeground=digit_color(mine_count))
 
-# Функція перевірки на перемогу
+# Функція перевірки на виграш у грі
 def is_won():
+    # Цикл перевірки всіх комірок масиву кнопок
     for i in range(rows):
         for j in range(cols):
+            # Поточна кнопка
             button = buttons[i][j]
-            # Перевірка, що всі клітинки з мінами мають прапорці, і всі інші відкриті
-            if mines[i][j]:
+
+            if mines[i][j]: # Якщо у клітинці є міна
                 if button.cget("background") != light_green:  # Прапорець не стоїть на міні
                     return False
-            else:
-                if button.cget("state") != "disabled":  # Не міна, але не відкрита
+            else: # Якщо у клітинці немає міни
+                if button.cget("state") != "disabled":  # Якщо клітинка доступна до взаємодії
                     return False
     return True  # Всі умови виграшу виконані
 
 # Функція відкриття всіх мін
-
-def open_all_mines():
-    global mines, is_enable_click
+def open_all_mines(row, col):
+    # Змінна масиву мін
+    global mines
+    # Цикл перебору всіх кнопок у масиві
     for i in range(rows):
         for j in range(cols):
-            if mines[i][j]:
-                button = buttons[i][j]
+            # Поточна кнопка
+            button = buttons[i][j]
+            # Якщо це міна і це не клітинка, на яку натиснули
+            if mines[i][j] and (row != i or col != j):
+                # Зміна параметрів кнопки(текст, колір, доступність)
                 button.config(text="!", state="disabled", disabledforeground=black)
-                button.config(background=red)
-                is_enable_click = False
+                button.config(background=grey)
 
+# Функція виведення повідомлення про виграш
 def win():
-    global game_end_message
+    # Змінні повідомлення про кінець гри і кількість секунд поточної гри
+    global game_end_message, seconds
 
-    # Зупинка таймера
+    # Зупинка таймеру
     stop_timer()
 
-    # Повідомлення про виграш
+    # Зміна параметрів повідомлення про виграш(текст, шрифт, колір, обводка, розміри)
     game_end_message = tkinter.Label(
         game_field,
         text=f"You won!\nTime: {seconds} s",
@@ -380,15 +405,19 @@ def win():
         width=top_canvas_width // 50,
         height=2
     )
+
+    # Розміщення повідомлення про виграш у вікні програми
     game_end_message.place(relx=0.5, rely=0.6, anchor="center")
 
+# Функція виведення повідомлення про програш
 def lose():
+    # Змінна повідомлення про кінець гри
     global game_end_message
 
-    # Зупинка таймера
+    # Зупинка таймеру
     stop_timer()
 
-    # Повідомлення про прогаш
+    # Зміна параметрів повідомлення про виграш(текст, шрифт, колір, обводка, розміри)
     game_end_message = tkinter.Label(
         game_field,
         text="You lose!",
@@ -397,15 +426,75 @@ def lose():
         foreground=white,
         highlightthickness=1,
         highlightbackground=white,
-        width=top_canvas_width // 50,
-        height=2
+        width=top_canvas_width // 150,
+        height=1
     )
+
+    # Розміщення повідомлення про виграш у вікні програми
     game_end_message.place(relx=0.5, rely=0.6, anchor="center")
 
-def new_game():
-    # Створення масиву з мінами
-    global mines
-    mines = generate_mines(rows, cols, flags_number)
+# Функція обробка кліку лівою кнопкою (відкриття клітинки)
+def left_click(event, row, col):
+    # Змінні чи доступна взаємодія з кнопками і повідомлення про кінець гри
+    global is_enable_click, game_end_message
+    # Змінна поточної кнопки
+    button = buttons[row][col]
+    # Змінна кольору поточної кнопки
+    current_color = button.cget("background")
+
+    # Якщо поточна кнопка не прапорець, не відкрита і доступна для натиснення
+    if current_color != light_green and current_color != medium_grey and is_enable_click:
+        # Якщо поточна комірка містить міну
+        if mines[row][col]:
+            # Зміна параметрів поточної кнопки(текст, колір, доступність)
+            button.config(text="!", state="disabled", disabledforeground=black)
+            button.config(background=red)
+            is_enable_click = False  # Взаємодія з кнопками не доступна
+
+            # Відкриття всіх мін, окрім поточної
+            open_all_mines(row, col)
+            # Запуск дій функції програшу
+            lose()
+        else:  # В поточній комірці немає міни
+            # Обрахунок кількості мін навколо
+            mine_count = count_adjacent_mines(row, col)
+            if mine_count > 0:  # Якщо навколо є хоча б одна міна
+                # Зміна параметрів кнопки(текст = кількість мін навколо, доступність = недоступна, колір шрифту залежить від кількості мін навколо)
+                button.config(text=str(mine_count), state="disabled", disabledforeground=digit_color(mine_count))
+                button.config(background=medium_grey, highlightthickness=2)
+            else:  # Якщо навколо немає мін
+                open_empty_cells(row, col)  # Відкриваємо всі клітинки без мін навколо поточної і наступні
+                # Зміна параметрів кнопки(доступність, колір шрифту, колір)
+                button.config(state="disabled", disabledforeground=white)
+                button.config(background=medium_grey)
+
+            # Перевірка на виграш після відкриття клітинки
+            if is_won():  # Якщо всі умови для виграшу виконані
+                win()  # Запуск дій функції виграшу
+
+# Функція обробки кліку правою кнопкою (встановлення/видалення прапорця)
+def right_click(event, row, col):
+    # Змінна чи доступна взаємодія з кнопками
+    global is_enable_click
+    # Змінна поточної кнопки
+    button = buttons[row][col]
+    # Змінна кольору поточної кнопки
+    current_color = button.cget("background")
+
+    if is_enable_click:  # Якщо можна натиснути на кнопку
+        if current_color == light_green:  # Якщо колір кнопки = кольору прапорця
+            action = flags_number_del()  # Змінна action, для перевірки, чи можна видалити прапорець(якщо так, то одразу видаляє)
+            if action:  # Якщо прапорець видалили
+                button.config(background=light_grey, text="")  # Зміна параметрів поточної кнопки(колір, текст)
+        else:  # Якщо колір кнопки != кольору прапорця
+            if current_color == light_grey:  # Якщо комірка ще не відкрита
+                action = flags_number_add()  # Змінна action, для перевірки, чи можна додати прапорець(якщо так, то одразу додає)
+                if action:  # Якщо прапорець додали
+                    button.config(background=light_green, text="<|")   # Зміна параметрів поточної кнопки(колір, текст)
+
+        # Перевірка на виграш після встановлення прапорця
+        if is_won():  # Якщо всі умови для виграшу виконані
+            win()  # Запуск дій функції виграшу
 
 # -------------------------------------------------ЗАПУСК ПРОГРАМИ-----------------------------------------------------|
-game_field.mainloop()
+game_field.mainloop()  #Запуск циклу обробки подій взаємодії з вікном, поки його не закрито

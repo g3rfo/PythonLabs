@@ -426,8 +426,8 @@ def lose():
         foreground=white,
         highlightthickness=1,
         highlightbackground=white,
-        width=top_canvas_width // 150,
-        height=1
+        width=top_canvas_width // 50,
+        height=2
     )
 
     # Розміщення повідомлення про виграш у вікні програми

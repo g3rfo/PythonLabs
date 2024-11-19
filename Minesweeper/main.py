@@ -132,12 +132,11 @@ def flags_number_add():
 # Змінні для роботи функцій кнопки старт
 is_enable_click = True
 game_end_message = None
-counter = 0
 
 # Функції кнопки старт
 def start_button_click():
     # Змінні для роботи
-    global seconds, timer_id, current_flags_number, game_end_message, is_enable_click, mines, counter
+    global seconds, timer_id, current_flags_number, game_end_message, is_enable_click, mines
 
     # Зупинка таймеру
     stop_timer()
